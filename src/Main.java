@@ -1,18 +1,22 @@
 import BusinessClasses.Categoria;
+import BusinessClasses.ContenedorDeGastos;
 import BusinessClasses.GastoReal;
 import Exceptions.MinorQueZeroException;
 import Utiles.Helper;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Date;
 
 public class Main {
-
+//ArrayList, LinkedList
 
 
     public static void main(String[] args) {
 
         Helper miHelper = new Helper();
+
         try{
 
             System.out.println("Comenzando mi proyecto Gestor de gastos!");
@@ -46,6 +50,11 @@ public class Main {
 
             System.out.println("Gasto creado con exito: " + miGasto.getGastoDescripcion());
             System.out.println("Gasto nro: " + GastoReal.getContador());
+
+            ContenedorDeGastos contenedor = new ContenedorDeGastos();
+            contenedor.addGasto(miGasto);
+            contenedor.showGastos();
+
         }
         catch(Exception ex)//InputMismatchException
         {
