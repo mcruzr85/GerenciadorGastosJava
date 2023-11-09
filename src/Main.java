@@ -1,4 +1,5 @@
 import BusinessClasses.Categoria;
+import BusinessClasses.ContenedorDeCategorias;
 import BusinessClasses.ContenedorDeGastos;
 import BusinessClasses.GastoReal;
 import Exceptions.MinorQueZeroException;
@@ -19,21 +20,26 @@ public class Main {
 
         try{
 
+
             System.out.println("Comenzando mi proyecto Gestor de gastos!");
 
             Scanner scanner = new Scanner(System.in);
 
             System.out.println("Agregue una categoría de gastos");
-            Categoria nuevaCategoria = new Categoria(scanner.nextLine());
+            String valor = scanner.nextLine();
+            ContenedorDeCategorias contenedorCat = new ContenedorDeCategorias();
 
-            System.out.println("Categoria creada: " + nuevaCategoria.getNombre());
-            System.out.println("Categoria con id: " + nuevaCategoria.getId());
+            while(!valor.equals("X")){
+                    contenedorCat.addCategoria(new Categoria(valor));
+                    //Categoria nuevaCategoria = new Categoria(valor);
+                    System.out.println("Categoria " + valor + " creada con éxito. Agregue un nueva categoria o escriba X para terminar" );
+                    valor = scanner.nextLine();
+            }
 
-            System.out.println("Agregue otra categoría de gastos");
-            Categoria otraCategoria = new Categoria(scanner.nextLine());
 
-            System.out.println("Categoria creada: " + otraCategoria.getNombre());
-            System.out.println("Categoria con id: " + otraCategoria.getId());
+            System.out.println("Lista de categorias creada con exito: " );
+            contenedorCat.showCategories();
+
             //GastoReal(Categoria categoria,String descripcion, int valor,  String fecha){
 
             System.out.println("Agregue un gasto");
@@ -46,7 +52,7 @@ public class Main {
 
             Date fechaActual = new Date();
 
-            GastoReal miGasto = new GastoReal(nuevaCategoria, descrip, monto, fechaActual);
+            GastoReal miGasto = new GastoReal(contenedorCat.getCategoryList().get(0), descrip, monto, fechaActual);
 
             System.out.println("Gasto creado con exito: " + miGasto.getGastoDescripcion());
             System.out.println("Gasto nro: " + GastoReal.getContador());
