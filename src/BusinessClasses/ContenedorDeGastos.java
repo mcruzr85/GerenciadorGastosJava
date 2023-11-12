@@ -34,8 +34,8 @@ public class ContenedorDeGastos implements GastoOperations {
     //para mostrar todos los gastos de la lista de gastos
     @Override
     public void showGastos() {
+        System.out.println("Relatorio de gastos actuales");
         for(GastoReal gasto: this.gastosList){
-            System.out.println("metodo showGastos, mostrando los gastos adicionados");
             System.out.println("Gasto: " + gasto.getGastoDescripcion());
         }
     }

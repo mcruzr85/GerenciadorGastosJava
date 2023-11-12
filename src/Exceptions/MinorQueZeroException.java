@@ -23,7 +23,7 @@ public class MinorQueZeroException extends RuntimeException{
         return valor;
     }
 
-    public String relatorio(){
+    public String relatorioException(){
         return "El valor que causó la excepcion fue: " + getValor();
     }
 }
