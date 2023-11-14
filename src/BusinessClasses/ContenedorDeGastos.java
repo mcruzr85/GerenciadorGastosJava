@@ -2,16 +2,15 @@ package BusinessClasses;
 
 import Interfaces.GastoOperations;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import java.util.stream.Collectors;
 
 public class ContenedorDeGastos implements GastoOperations {
 
     private List<GastoReal> gastosList = new ArrayList<>();
-    Map<String, Integer> contadorDeCategoriasPorNombre = new HashMap<>();
+    Map<String, Integer> categoriasMap = new HashMap<>();
+
 
     public ContenedorDeGastos(){
 
@@ -33,15 +32,27 @@ public class ContenedorDeGastos implements GastoOperations {
     @Override
     public void addGasto(GastoReal gasto) {
         String catName = gasto.getCategoria().getNombre();
-      Map<String, Integer> clavequebusco;
-        clavequebusco = contadorDeCategoriasPorNombre.stream()
-                .filter(elemento -> elemento.getKey() == catName)
-                .collect(Collectors.toMap(<String, Integer>));
+        /*Set<String> categoriasKeySet = this.categoriasMap.keySet(); //obteniendo una lista con las categorias
+
+
+        boolean existeGastoConEsaCategoria = categoriasKeySet.stream().anyMatch( e -> Objects.equals(e, catName));*/
+
+    List<Integer> cantidadList = this.categoriasMap.entrySet().stream()
+                .filter(e -> e.getKey().equals(catName))
+                .map(Map.Entry::getValue)
+                 .collect(Collectors.toList());
+        Integer cantActual = cantidadList.get(0);
+
+        if(cantActual>0){
+            this.categoriasMap.put(catName, cantActual++);
+        }else{
+            this.categoriasMap.put(catName,1);
+        }
+
 
         this.gastosList.add(gasto);
 
 
-        this.contadorDeCategoriasPorNombre.put( )
     }
 
     //para mostrar todos los gastos de la lista de gastos
