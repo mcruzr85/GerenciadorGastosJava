@@ -5,18 +5,20 @@ import Interfaces.GastoOperations;
 import java.util.*;
 
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ContenedorDeGastos implements GastoOperations {
 
     private List<GastoReal> gastosList = new ArrayList<>();
-    Map<String, Integer> categoriasMap = new HashMap<>();
+    private Map<String, Integer> categoriasMap = new HashMap<>();
 
 
     public ContenedorDeGastos(){
 
     }
-    public ContenedorDeGastos(List<GastoReal> gastosList) {
+    public ContenedorDeGastos(List<GastoReal> gastosList, Map<String, Integer> categoriasMap) {
         this.gastosList = gastosList;
+        this.categoriasMap = categoriasMap;
     }
 
     public List<GastoReal> getGastosList() {
@@ -29,30 +31,43 @@ public class ContenedorDeGastos implements GastoOperations {
 
     //adicionando un nuevo gasto a la lista de gastos
 
+    public Map<String, Integer> getCategoriasMap() {
+        return categoriasMap;
+    }
+
+    public void setCategoriasMap(Map<String, Integer> categoriasMap) {
+        this.categoriasMap = categoriasMap;
+    }
+
     @Override
     public void addGasto(GastoReal gasto) {
+        System.out.println("dentro de addGasto inicio");
         String catName = gasto.getCategoria().getNombre();
+        System.out.println("dentro de addGasto obtuve catName" + catName);
         /*Set<String> categoriasKeySet = this.categoriasMap.keySet(); //obteniendo una lista con las categorias
 
 
         boolean existeGastoConEsaCategoria = categoriasKeySet.stream().anyMatch( e -> Objects.equals(e, catName));*/
 
-    List<Integer> cantidadList = this.categoriasMap.entrySet().stream()
+        int cantidadCat;
+        cantidadCat = this.categoriasMap.entrySet().stream()
                 .filter(e -> e.getKey().equals(catName))
-                .map(Map.Entry::getValue)
-                 .collect(Collectors.toList());
-        Integer cantActual = cantidadList.get(0);
+                .mapToInt(e -> e.getValue()).sum();
 
-        if(cantActual>0){
-            this.categoriasMap.put(catName, cantActual++);
+
+               /* .map(Map.Entry::getValue)
+                 .toList();*/
+        System.out.println("mostrando cantCat" + cantidadCat);
+
+        if(cantidadCat != 0){
+            System.out.println("dentro de adicionar gasto" + " cantidad de elementos en esa categoria de gasto es " + cantidadCat);
+            this.categoriasMap.put(catName, cantidadCat++);
         }else{
             this.categoriasMap.put(catName,1);
         }
 
 
         this.gastosList.add(gasto);
-
-
     }
 
     //para mostrar todos los gastos de la lista de gastos
