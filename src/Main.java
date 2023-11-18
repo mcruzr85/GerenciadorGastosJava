@@ -84,7 +84,7 @@ public class Main {
 
                 //finalmente muestro todos los gastos creados
                 contenedorGastos.showGastos();
-
+                contenedorGastos.showCategoriasCantidades();
             }else{
                 System.out.println("Gracias, será en otra ocasión");
             }

@@ -6,6 +6,7 @@ import java.util.*;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class ContenedorDeGastos implements GastoOperations {
 
@@ -43,31 +44,31 @@ public class ContenedorDeGastos implements GastoOperations {
     public void addGasto(GastoReal gasto) {
         System.out.println("dentro de addGasto inicio");
         String catName = gasto.getCategoria().getNombre();
-        System.out.println("dentro de addGasto obtuve catName" + catName);
+        System.out.println("dentro de addGasto obtuve catName: " + catName);
         /*Set<String> categoriasKeySet = this.categoriasMap.keySet(); //obteniendo una lista con las categorias
 
 
         boolean existeGastoConEsaCategoria = categoriasKeySet.stream().anyMatch( e -> Objects.equals(e, catName));*/
-
-        int cantidadCat;
-        cantidadCat = this.categoriasMap.entrySet().stream()
+//Podemos usar el método keySet() para obtener un conjunto de claves
+        HashMap<String, Integer>  map = this.categoriasMap.entrySet().stream()
                 .filter(e -> e.getKey().equals(catName))
-                .mapToInt(e -> e.getValue()).sum();
+                .findFirst().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if(map.isEmpty()){
+            this.categoriasMap.put(catName, cantidadCat++);
+            System.out.println("ahora hay " + cantidadCat + " gastos en esa categoria");
+        }
+
 
 
                /* .map(Map.Entry::getValue)
                  .toList();*/
-        System.out.println("mostrando cantCat" + cantidadCat);
+        System.out.println("mostrando cant de gastos de la categoria, antes de adicionar el gasto actual es: " + cantidadCat);
 
-        if(cantidadCat != 0){
-            System.out.println("dentro de adicionar gasto" + " cantidad de elementos en esa categoria de gasto es " + cantidadCat);
-            this.categoriasMap.put(catName, cantidadCat++);
-        }else{
-            this.categoriasMap.put(catName,1);
-        }
+            this.gastosList.add(gasto);
 
 
-        this.gastosList.add(gasto);
+
     }
 
     //para mostrar todos los gastos de la lista de gastos
@@ -78,6 +79,13 @@ public class ContenedorDeGastos implements GastoOperations {
             System.out.println("Gasto: " + gasto.getGastoDescripcion());
         }
     }
+
+    public void showCategoriasCantidades(){
+        System.out.println("mostrando el map actual de categorias y cantidades");
+         this.categoriasMap.entrySet().stream()
+                .forEach(e -> System.out.println("la cat " + e.getKey() + " tiene " + e.getValue() + "gastos"));
+    }
+
 
     @Override
     public void checkAmountGasto() {
