@@ -49,27 +49,29 @@ public class ContenedorDeGastos implements GastoOperations {
 
 
         boolean existeGastoConEsaCategoria = categoriasKeySet.stream().anyMatch( e -> Objects.equals(e, catName));*/
-//Podemos usar el método keySet() para obtener un conjunto de claves
-        HashMap<String, Integer>  map = this.categoriasMap.entrySet().stream()
-                .filter(e -> e.getKey().equals(catName))
-                .findFirst().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        if(map.isEmpty()){
-            this.categoriasMap.put(catName, cantidadCat++);
-            System.out.println("ahora hay " + cantidadCat + " gastos en esa categoria");
+        OptionalInt cantCat = this.categoriasMap.entrySet().stream()
+                .filter(e -> e.getKey().equals(catName))
+                .mapToInt(Map.Entry::getValue)
+                .findFirst();
+
+        if(cantCat.isPresent()){
+            int cantidad = cantCat.getAsInt();
+            System.out.println("cant antes de insertar es: " + cantidad );
+            this.categoriasMap.put(catName, ++cantidad);
+            System.out.println("ahora hay " + this.categoriasMap.get(catName) + " gastos en esa categoria");
+        }
+        else{
+            this.categoriasMap.put(catName, 1);
+            System.out.println("adicionado primer gasto a la categoria " + catName);
+        }
+
+        //System.out.println("mostrando cant de gastos de la categoria, antes de adicionar el gasto actual es: " + ca);
+
+        this.gastosList.add(gasto);
         }
 
 
-
-               /* .map(Map.Entry::getValue)
-                 .toList();*/
-        System.out.println("mostrando cant de gastos de la categoria, antes de adicionar el gasto actual es: " + cantidadCat);
-
-            this.gastosList.add(gasto);
-
-
-
-    }
 
     //para mostrar todos los gastos de la lista de gastos
     @Override
