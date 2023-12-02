@@ -8,25 +8,25 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class ContenedorDeGastos implements GastoOperations {
+public class ContenedorDeGastos{
 
-    private List<GastoReal> gastosList = new ArrayList<>();
+    private List<Gasto> gastosList = new ArrayList<>();
     private Map<String, Integer> categoriasMap = new HashMap<>();
 
 
     public ContenedorDeGastos(){
 
     }
-    public ContenedorDeGastos(List<GastoReal> gastosList, Map<String, Integer> categoriasMap) {
+    public ContenedorDeGastos(List<Gasto> gastosList, Map<String, Integer> categoriasMap) {
         this.gastosList = gastosList;
         this.categoriasMap = categoriasMap;
     }
 
-    public List<GastoReal> getGastosList() {
+    public List<Gasto> getGastosList() {
         return gastosList;
     }
 
-    public void setGastosList(List<GastoReal> gastosList) {
+    public void setGastosList(List<Gasto> gastosList) {
         this.gastosList = gastosList;
     }
 
@@ -40,8 +40,8 @@ public class ContenedorDeGastos implements GastoOperations {
         this.categoriasMap = categoriasMap;
     }
 
-    @Override
-    public void addGasto(GastoReal gasto) {
+
+    public void addGasto(Gasto gasto) {
         System.out.println("dentro de addGasto inicio");
         String catName = gasto.getCategoria().getNombre();
         System.out.println("dentro de addGasto obtuve catName: " + catName);
@@ -74,10 +74,10 @@ public class ContenedorDeGastos implements GastoOperations {
 
 
     //para mostrar todos los gastos de la lista de gastos
-    @Override
+
     public void showGastos() {
         System.out.println("Relatorio de gastos actuales");
-        for(GastoReal gasto: this.gastosList){
+        for(Gasto gasto: this.gastosList){
             System.out.println("Gasto: " + gasto.getGastoDescripcion());
         }
     }
@@ -88,7 +88,7 @@ public class ContenedorDeGastos implements GastoOperations {
                 .forEach(e -> System.out.println("la cat " + e.getKey() + " tiene " + e.getValue() + "gastos"));
     }
 
-
+/*
     @Override
     public void checkAmountGasto() {
 
@@ -102,5 +102,5 @@ public class ContenedorDeGastos implements GastoOperations {
      @Override
     public void showGastosFromCategory() {
 
-    }
+    }*/
 }

@@ -1,9 +1,7 @@
 package BusinessClasses;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ContenedorDeCategorias {
     List<Categoria> categoryList = new ArrayList<>();
@@ -36,12 +34,18 @@ public class ContenedorDeCategorias {
     public Categoria getCategoryFromDescription(String descrip){
         System.out.println("mostrando la descripcion a buscar en la lista de categorias");
         System.out.println(descrip);
+       /* Optional<Categoria> cat = this.categoryList.stream()
+                .filter(e -> e.getNombre().equalsIgnoreCase(descrip))
+                .findFirst();
+
+        */
+        Categoria categ= new Categoria();
         for(Categoria cat : this.categoryList){
             if(cat.getNombre().equalsIgnoreCase(descrip)){
-                return cat;
+               return cat;
             }
         }
-        return null;
+        return categ;
     }
 
 }

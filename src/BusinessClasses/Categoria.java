@@ -6,7 +6,7 @@ public class Categoria {
     private String nombre;
 
     public Categoria() {
-        contadorCategoria++;
+
     }
 
     public Categoria(String nombre) {
