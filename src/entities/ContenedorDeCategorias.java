@@ -1,7 +1,6 @@
-package BusinessClasses;
+package entities;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ContenedorDeCategorias {
     List<Categoria> categoryList = new ArrayList<>();

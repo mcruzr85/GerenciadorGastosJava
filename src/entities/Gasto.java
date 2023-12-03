@@ -1,9 +1,8 @@
-package BusinessClasses;
-import java.util.Date;
+package entities;
 
 public class Gasto {
     //incrementa el contador cada vez que se crea una instancia de GastoReal
-    private static Integer contador = 0;
+    public static Integer contador = 1;
     private Integer id;
     private Categoria categoria;
     private double valor;
@@ -14,18 +13,19 @@ public class Gasto {
 
     //incrementa el contador cada vez que se crea una instancia de Gasto
     Gasto(){
+        this.id = contador;
         contador++;
     }
 
 
 
     public Gasto( Categoria categoria,String descripcion, double valor,  String fecha) {
-        contador++;
         this.id = contador;
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.valor = valor;
         this.fecha = fecha;
+        contador++;
     }
 
     public void setValor(double valor) {
@@ -35,8 +35,6 @@ public class Gasto {
     public static int getContador() {
         return contador;
     }
-
-
 
     public double getValor() {
         return valor;
@@ -68,5 +66,16 @@ public class Gasto {
 
     public String getGastoDescripcion(){
         return getDescripcion() + " por un valor de " + getValor() + " realizado " + getFecha();
+    }
+
+    @Override
+    public String toString() {
+        return "Gasto{" +
+                "id=" + id +
+                ", categoria=" + categoria +
+                ", valor=" + valor +
+                ", fecha='" + fecha + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                '}';
     }
 }

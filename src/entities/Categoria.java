@@ -1,4 +1,4 @@
-package BusinessClasses;
+package entities;
 
 public class Categoria {
     private static int contadorCategoria = 0;
@@ -6,11 +6,12 @@ public class Categoria {
     private String nombre;
 
     public Categoria() {
-
+        contadorCategoria+=contadorCategoria;
+        this.id = contadorCategoria;
     }
 
     public Categoria(String nombre) {
-        contadorCategoria++;
+        contadorCategoria+=contadorCategoria;
         this.id = contadorCategoria;
         this.nombre = nombre;
     }

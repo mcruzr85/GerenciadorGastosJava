@@ -1,4 +1,4 @@
-package BusinessClasses;
+package entities;
 
 public class Container <T>{
 }

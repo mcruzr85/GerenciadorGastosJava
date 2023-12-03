@@ -1,6 +1,6 @@
-package Utiles;
+package utiles;
 
-import Exceptions.MinorQueZeroException;
+import exceptions.MinorQueZeroException;
 
 public class Helper {
     public Helper(){
