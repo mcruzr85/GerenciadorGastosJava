@@ -5,6 +5,8 @@ import entities.Gasto;
 import exceptions.InvalidGastoMontoException;
 import interfaces.GastoMontoValidation;
 import interfaces.GastoMontoValidationImpl;
+import interfaces.GastoOperations;
+import interfaces.GastoOperationsImpl;
 import utiles.Helper;
 
 import java.util.Scanner;
@@ -16,9 +18,12 @@ public class Main {
 public static int counterGastos = 1;
     public static void main(String[] args) throws InvalidGastoMontoException {
 
-        Helper miHelper = new Helper();
+       // Helper miHelper = new Helper();
         Scanner scanner = new Scanner(System.in);
+
+        //se llama desde la interfaz y se instancia la implementacion
         GastoMontoValidation gastoMontoValidation = new GastoMontoValidationImpl();
+        GastoOperations gastoOperations = new GastoOperationsImpl();
 
         try{
 
@@ -66,10 +71,10 @@ public static int counterGastos = 1;
                     System.out.print("Agregue el valor del gasto: ");
                     double monto = scanner.nextDouble();
                     //llamada a validar monto de la clase Helper
-                    miHelper.validarMonto(monto);
+                   // miHelper.validarMonto(monto);
 
-                    if(!gastoMontoValidation.validateMonto(monto)){
-                        System.out.println("");
+                    if(!gastoMontoValidation.nonValidMonto(monto)){
+                        System.out.println("El valor del gasto es válido");
                     }
 
 
@@ -100,6 +105,9 @@ public static int counterGastos = 1;
                 //finalmente muestro todos los gastos creados
                 contenedorGastos.showGastos();
                 contenedorGastos.showCategoriasCantidades();
+
+                //System.out.println("mostrando la lista usando la interfaz");
+              //  gastoOperations.calculateTotalGastos(contenedorGastos);
             }else{
                 System.out.println("Gracias, será en otra ocasión");
             }

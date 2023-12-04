@@ -11,7 +11,7 @@ public class GastoOperationsImpl implements GastoOperations{
 
     @Override
     public double calculateTotalGastos(List<Gasto> gastos) {
-        Double total = 0
+        double total = 0;
            total =  (double) gastos.stream().count();
         return total;
     }
