@@ -11,6 +11,11 @@ import utiles.Helper;
 
 import java.util.Scanner;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Main {
 //ArrayList, LinkedList
 
@@ -24,6 +29,13 @@ public static int counterGastos = 1;
         //se llama desde la interfaz y se instancia la implementacion
         GastoMontoValidation gastoMontoValidation = new GastoMontoValidationImpl();
         GastoOperations gastoOperations = new GastoOperationsImpl();
+
+        // Configurar los parámetros de conexión
+
+        String url = "jdbc:h2:~/test/gestion_gastosdb"; // URL de conexión a la base de datos H2
+        String url1 ="jdbc:h2:tcp://localhost/server~/test/gestion_gastosdb";
+        String username = "sa"; // Nombre de usuario de la base de datos
+        String password = ""; // Contraseña de la base de datos
 
         try{
 
@@ -106,11 +118,36 @@ public static int counterGastos = 1;
                 contenedorGastos.showGastos();
                 contenedorGastos.showCategoriasCantidades();
 
+
+
                 //System.out.println("mostrando la lista usando la interfaz");
               //  gastoOperations.calculateTotalGastos(contenedorGastos);
             }else{
                 System.out.println("Gracias, será en otra ocasión");
             }
+
+            //***************************
+            // Establecer la conexión con la base de datos
+            Connection connection = DriverManager.getConnection(url, username, password);
+           // Connection connection1 = DriverManager.getConnection("jdbc:h2:tcp://localhost/server~/test","username","password");
+            // Crear una declaración SQL
+            Statement statement = connection.createStatement();
+
+            // Crear la tabla
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS meybis (id INT PRIMARY KEY, nombre VARCHAR(50))";
+            statement.executeUpdate(createTableQuery);
+
+            // Insertar registros
+            String insertQuery = "INSERT INTO meybis VALUES (1, 'John Doe'), (2, 'Jane Smith')";
+            statement.executeUpdate(insertQuery);
+
+            // Cerrar la conexión
+            statement.close();
+            connection.close();
+
+            System.out.println("Registros insertados con éxito en la tabla 'usuarios'.");
+
+            //*******************
 
         }
         catch(Exception ex)//InputMismatchException
