@@ -36,7 +36,7 @@ public static int counterGastos = 1;
         // Configurar los parámetros de conexión
 
         String url = "jdbc:h2:file:D:\\h2\\h2dbmey\\expenses"; // URL de conexión a la base de datos H2
-        String url1 ="jdbc:h2:tcp://localhost/server~/test/gestion_gastosdb";
+     //   String url1 ="jdbc:h2:tcp://localhost/server~/test/gestion_gastosdb";
         String username = "admin"; // Nombre de usuario de la base de datos
         String password = "123"; // Contraseña de la base de datos
 
@@ -48,7 +48,7 @@ public static int counterGastos = 1;
           //creando el scanner para leer entrada del usuario
 
 
-            System.out.print("Agregue una categoría de gastos: ");
+         /*   System.out.print("Agregue una categoría de gastos: ");
             String categoryName = scanner.nextLine();
 
             //creo el ArrayLista para guardar las categorias
@@ -66,7 +66,7 @@ public static int counterGastos = 1;
 
             //mostrando todas las categorias adicionadas
             contenedorCat.showCategories();
-
+*/
             //Agregando los gastos
 
             System.out.println("Si desea agregar un gasto escriba Si");
@@ -88,6 +88,8 @@ public static int counterGastos = 1;
                     //llamada a validar monto de la clase Helper
                    // miHelper.validarMonto(monto);
 
+
+                    //aqui uso el obj de la clase que implementa la interfaz seria como un helper
                     if(!gastoMontoValidation.nonValidMonto(monto)){
                         System.out.println("El valor del gasto es válido");
                     }
@@ -109,11 +111,14 @@ public static int counterGastos = 1;
                 //retorna una categoria dada una descripcion
                 /* Categoria cat = contenedorCat.getCategoryFromDescription(categoriaGastoActual);
                    if(cat.getNombre().equalsIgnoreCase(categoriaGastoActual)){*/
+
+                    //creo el gasto a partir de la entrada de los usuarios y lo agrego a la lista
                     contenedorGastos.addGasto(new Gasto(cat, descrip, monto, fechaActual));
 
                     System.out.println("Gasto nro: " + Gasto.getContador() + " " + descrip + " creado con éxito");
-                    System.out.println("Si desea agregar un nuevo gasto escriba Si");
 
+
+                    System.out.println("Si desea agregar un nuevo gasto escriba Si");
                     decision = scanner.nextLine();
                 }
 
@@ -121,10 +126,11 @@ public static int counterGastos = 1;
                 contenedorGastos.showGastos();
                 contenedorGastos.showCategoriasCantidades();
 
+                System.out.println(" Ahora mostrando la lista usando la interfaz");
+                gastoOperations.calculateTotalGastos(contenedorGastos);
 
 
-                //System.out.println("mostrando la lista usando la interfaz");
-              //  gastoOperations.calculateTotalGastos(contenedorGastos);
+
             }else{
                 System.out.println("Gracias, será en otra ocasión");
             }
