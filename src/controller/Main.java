@@ -1,3 +1,5 @@
+package controller;
+
 import entities.Categoria;
 import entities.ContenedorDeCategorias;
 import entities.ContenedorDeGastos;
