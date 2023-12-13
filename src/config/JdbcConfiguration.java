@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class JdbcConfiguration {
 
     private static final String DB_DRIVER = "org.h2.Driver";
-    private static final String DB_CONNECTION = "jdbc:h2:~/productdbname";
+    private static final String DB_CONNECTION = "jdbc:h2:D:\\h2\\h2dbmey\\expenses";
     private static final String DB_USER = "admin";
     private static final String DB_PASSWORD = "123";
 

@@ -1,8 +1,8 @@
-package entities;
+package dao.dto;
 
-public class Gasto {
-    //incrementa el contador cada vez que se crea una instancia de GastoReal
-    public static Integer contador = 1;
+import entities.Categoria;
+
+public class GastoDto {
     private int id;
     private Categoria categoria;
     private double valor;
@@ -10,14 +10,11 @@ public class Gasto {
     private String descripcion;//el profe no tiene esto
 
 
-
-    //incrementa el contador cada vez que se crea una instancia de Gasto
-    public Gasto(){
+    GastoDto(){
     }
 
 
-
-    public Gasto( Categoria categoria,String descripcion, double valor,  String fecha) {
+    public GastoDto( Categoria categoria,String descripcion, double valor,  String fecha) {
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.valor = valor;
@@ -26,10 +23,6 @@ public class Gasto {
 
     public void setValor(double valor) {
         this.valor = valor;
-    }
-
-    public static int getContador() {
-        return contador;
     }
 
     public double getValor() {
@@ -60,18 +53,4 @@ public class Gasto {
         this.categoria = categoria;
     }
 
-    public String getGastoDescripcion(){
-        return getDescripcion() + " por un valor de " + getValor() + " realizado " + getFecha();
-    }
-
-    @Override
-    public String toString() {
-        return "Gasto{" +
-                "id=" + id +
-                ", categoria=" + categoria +
-                ", valor=" + valor +
-                ", fecha='" + fecha + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                '}';
-    }
 }
