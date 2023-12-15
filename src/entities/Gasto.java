@@ -9,7 +9,13 @@ public class Gasto {
     private String fecha;
     private String descripcion;//el profe no tiene esto
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     //incrementa el contador cada vez que se crea una instancia de Gasto
     public Gasto(){

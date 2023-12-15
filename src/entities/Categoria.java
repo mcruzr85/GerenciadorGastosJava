@@ -1,18 +1,15 @@
 package entities;
 
 public class Categoria {
-    private static int contadorCategoria = 0;
-    private int id;
+   private int id;
     private String nombre;
 
     public Categoria() {
-        contadorCategoria+=contadorCategoria;
-        this.id = contadorCategoria;
     }
 
-    public Categoria(String nombre) {
-        contadorCategoria+=contadorCategoria;
-        this.id = contadorCategoria;
+    public Categoria(int id, String nombre) {
+
+        this.id = id;
         this.nombre = nombre;
     }
 

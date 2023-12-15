@@ -2,8 +2,11 @@ package dao;
 
 import config.JdbcConfiguration;
 import dao.dto.GastoDto;
+import entities.Categoria;
 import entities.Gasto;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -28,11 +31,11 @@ public class GastoDaoImplH2 implements GastoDao{
             newGasto.setFecha(gastoDto.getFecha());
             newGasto.setValor(gastoDto.getValor());
 
-            PreparedStatement ps = con.prepareStatement("INSERT INTO expense(description, amount, date, id_category) VALUES( ?, ?, ?, ?))");
-            ps.setString(2, newGasto.getDescripcion());
-            ps.setDouble(3, newGasto.getValor());
-            ps.setString(4, newGasto.getFecha());
-            ps.setInt(5, newGasto.getCategoria().getId());
+            PreparedStatement ps = con.prepareStatement("INSERT INTO expense (description, amount, date, id_category) VALUES (?, ?, ?, ?)");
+            ps.setString(1, newGasto.getDescripcion());
+            ps.setDouble(2, newGasto.getValor());
+            ps.setString(3, newGasto.getFecha());
+            ps.setInt(4, newGasto.getCategoria().getId());
 
             ps.executeUpdate();
 
@@ -44,6 +47,35 @@ public class GastoDaoImplH2 implements GastoDao{
 
     @Override
     public List<GastoDto> getAll() {
-        return null;
+        List<GastoDto> gastosDto = new ArrayList<>();
+
+        try{
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM expense");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                int id = rs.getInt("id_exp");
+                String descripcion = rs.getString("description");
+                String fecha = rs.getString("date");
+                double price = rs.getDouble("amount");
+                int id_cat = rs.getInt("id_category");
+                String catNameTest = "prueba";
+
+                GastoDto newGastoDto = new GastoDto();
+                newGastoDto.setId(id);
+                newGastoDto.setDescripcion(descripcion);
+                newGastoDto.setValor(price);
+                newGastoDto.setFecha(fecha);
+                newGastoDto.setCategoria(new Categoria(id_cat, catNameTest));
+
+                gastosDto.add(newGastoDto);
+            }
+
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return gastosDto;
     }
+
 }

@@ -10,11 +10,18 @@ public class GastoDto {
     private String descripcion;//el profe no tiene esto
 
 
-    GastoDto(){
+    public GastoDto(){
     }
 
+    public int getId() {
+        return id;
+    }
 
-    public GastoDto( Categoria categoria,String descripcion, double valor,  String fecha) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public GastoDto(Categoria categoria, String descripcion, double valor, String fecha) {
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.valor = valor;

@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 import dao.dto.GastoDto;
+import entities.Gasto;
 
 
     public interface GastoDao {
