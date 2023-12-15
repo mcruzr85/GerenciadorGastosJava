@@ -15,7 +15,10 @@ import entities.Gasto;
         List<GastoDto> getAll();
 
         //UPDATE
+        void update(GastoDto gastoDto);
 
         //DELETE
+
+        void delete(int id);
 
     }

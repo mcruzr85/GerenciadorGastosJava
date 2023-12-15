@@ -52,13 +52,23 @@ public static int counterGastos = 1;
 
             //Creando el objeto Dto para guardar los datos del usuario
 
-            GastoDto gastoDto = new GastoDto();
+           /* GastoDto gastoDto = new GastoDto();
             gastoDto.setDescripcion("Viaje a Molly Park de Maringa");
             gastoDto.setFecha("04/08/2024");
             gastoDto.setCategoria(new Categoria(1,"transportacion"));
-            gastoDto.setValor(5000);
+            gastoDto.setValor(5000);*/
+
+          /*  GastoDto gastoDto = new GastoDto();
+            gastoDto.setId(2);
+            gastoDto.setDescripcion("Comida de fin de ano");
+            gastoDto.setFecha("24/12/2023");
+           // gastoDto.setCategoria(new Categoria(2,"comida"));
+            gastoDto.setValor(600);
 
           //  gastoDao.insertar(gastoDto);
+            gastoDao.update(gastoDto);*/
+
+            gastoDao.delete(3);
 
             List<GastoDto> listaGastosDto = gastoDao.getAll();
             System.out.println("Lista de gastos en la Base de Datos:");

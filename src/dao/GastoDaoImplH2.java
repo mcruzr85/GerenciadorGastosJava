@@ -78,4 +78,49 @@ public class GastoDaoImplH2 implements GastoDao{
         return gastosDto;
     }
 
+    @Override
+    public void update(GastoDto gastoDto) {
+        try{  //creo la entidad Gasto con los valores que trae el Dto
+           Gasto newGasto = new Gasto();
+
+           newGasto.setId(gastoDto.getId());
+           newGasto.setDescripcion(gastoDto.getDescripcion());
+           newGasto.setValor(gastoDto.getValor());
+           newGasto.setFecha(gastoDto.getFecha());
+           newGasto.setCategoria(gastoDto.getCategoria());
+           PreparedStatement ps = con.prepareStatement(
+                   "UPDATE expense SET description = ?, date = ?, amount = ? WHERE id_exp = ?");
+
+           ps.setString(1, newGasto.getDescripcion());
+           ps.setString(2, newGasto.getFecha());
+           ps.setDouble(3, newGasto.getValor());
+           ps.setInt(4, newGasto.getId());
+
+           ps.executeUpdate();
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void delete(int gastoId) {
+        try{
+
+            PreparedStatement ps = con.prepareStatement(
+                    "DELETE FROM expense WHERE id_exp = ?"
+            );
+
+            ps.setInt(1, gastoId);
+            ps.executeUpdate();
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+
+        }
+
+
+    }
+
 }
