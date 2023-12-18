@@ -4,6 +4,7 @@ import config.JdbcConfiguration;
 import dao.dto.GastoDto;
 import entities.Categoria;
 import entities.Gasto;
+import exceptions.DAOException;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -14,32 +15,39 @@ import java.sql.Connection;
 
 public class GastoDaoImplH2 implements GastoDao{
 
-    private final Connection con; //esto es una dependencia
+    private static final String INSERT_INTO_EXPENSE = "INSERT INTO expense (description, amount, date, id_category) VALUES (?, ?, ?, ?)";
+
+    //generando una instancia de conexion que tiene que ser provista por otro obj
+    private final Connection connection; //esto es una dependencia
 
 
     //inicializo la conexion en el constructor
-    public GastoDaoImplH2(){
-        this.con = JdbcConfiguration.getDBConnection();
+    //cuando yo le pase una  conexion por constructor a mi clase voy a tener disponible una
+    // instancia de esa conexion para poder usarla
+    public GastoDaoImplH2(Connection connection){
+
+        this.connection = connection;
     }
 
     @Override
-    public void insertar(GastoDto gastoDto) {
-        try{
-            Gasto newGasto = new Gasto();
-            newGasto.setCategoria(gastoDto.getCategoria());
-            newGasto.setDescripcion(gastoDto.getDescripcion());
-            newGasto.setFecha(gastoDto.getFecha());
-            newGasto.setValor(gastoDto.getValor());
+    public void insert(GastoDto gastoDto) {
+        try( PreparedStatement ps = connection.prepareStatement(INSERT_INTO_EXPENSE)){
 
-            PreparedStatement ps = con.prepareStatement("INSERT INTO expense (description, amount, date, id_category) VALUES (?, ?, ?, ?)");
-            ps.setString(1, newGasto.getDescripcion());
-            ps.setDouble(2, newGasto.getValor());
-            ps.setString(3, newGasto.getFecha());
-            ps.setInt(4, newGasto.getCategoria().getId());
+            //mapeo a una entidad y manipulo la entidad hacia la bd
+            Gasto gasto = mapDtoToGasto(gastoDto);
 
-            ps.executeUpdate();
+            ps.setString(1, gasto.getDescripcion());
+            ps.setDouble(2, gasto.getValor());
+            ps.setString(3, gasto.getFecha());
+            ps.setInt(4, gasto.getCategoriaId());
 
-        }catch(SQLException e){
+            int affectedRows = ps.executeUpdate();
+
+            if(affectedRows == 0){
+                throw new DAOException("Error al insertar el gasto, 0 filas afectadas");
+            }
+
+        }catch (SQLException | DAOException e ){
             throw new RuntimeException(e);
         }
 
@@ -50,7 +58,7 @@ public class GastoDaoImplH2 implements GastoDao{
         List<GastoDto> gastosDto = new ArrayList<>();
 
         try{
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM expense");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM expense");
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()){
@@ -58,18 +66,21 @@ public class GastoDaoImplH2 implements GastoDao{
                 String descripcion = rs.getString("description");
                 String fecha = rs.getString("date");
                 double price = rs.getDouble("amount");
-                int id_cat = rs.getInt("id_category");
-                String catNameTest = "prueba";
+                Integer id_cat = rs.getInt("id_category");
+
 
                 GastoDto newGastoDto = new GastoDto();
                 newGastoDto.setId(id);
                 newGastoDto.setDescripcion(descripcion);
                 newGastoDto.setValor(price);
                 newGastoDto.setFecha(fecha);
-                newGastoDto.setCategoria(new Categoria(id_cat, catNameTest));
+                newGastoDto.setCategoriaId(id_cat);
 
                 gastosDto.add(newGastoDto);
             }
+            // Cerrar el ResultSet y el PreparedStatement
+            rs.close();
+            ps.close();
 
 
         }catch(SQLException e){
@@ -87,8 +98,8 @@ public class GastoDaoImplH2 implements GastoDao{
            newGasto.setDescripcion(gastoDto.getDescripcion());
            newGasto.setValor(gastoDto.getValor());
            newGasto.setFecha(gastoDto.getFecha());
-           newGasto.setCategoria(gastoDto.getCategoria());
-           PreparedStatement ps = con.prepareStatement(
+           newGasto.setCategoriaId(gastoDto.getCategoriaId());
+           PreparedStatement ps = connection.prepareStatement(
                    "UPDATE expense SET description = ?, date = ?, amount = ? WHERE id_exp = ?");
 
            ps.setString(1, newGasto.getDescripcion());
@@ -108,7 +119,7 @@ public class GastoDaoImplH2 implements GastoDao{
     public void delete(int gastoId) {
         try{
 
-            PreparedStatement ps = con.prepareStatement(
+            PreparedStatement ps = connection.prepareStatement(
                     "DELETE FROM expense WHERE id_exp = ?"
             );
 
@@ -122,5 +133,14 @@ public class GastoDaoImplH2 implements GastoDao{
 
 
     }
+
+private Gasto mapDtoToGasto(GastoDto gastoDto){
+    Gasto newGasto = new Gasto();
+    newGasto.setCategoriaId(gastoDto.getCategoriaId());
+    newGasto.setDescripcion(gastoDto.getDescripcion());
+    newGasto.setFecha(gastoDto.getFecha());
+    newGasto.setValor(gastoDto.getValor());
+    return newGasto;
+}
 
 }

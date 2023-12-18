@@ -1,13 +1,18 @@
 package controller;
 
+import config.JdbcConfiguration;
+import dao.CategoriaDao;
+import dao.CategoriaDaoImplH2;
 import dao.GastoDao;
 
 import dao.GastoDaoImplH2;
+import dao.dto.CategoriaDto;
 import dao.dto.GastoDto;
 import entities.Categoria;
 import entities.ContenedorDeCategorias;
 import entities.ContenedorDeGastos;
 import entities.Gasto;
+import exceptions.DAOException;
 import exceptions.InvalidGastoMontoException;
 import interfaces.GastoMontoValidation;
 import interfaces.GastoMontoValidationImpl;
@@ -33,8 +38,11 @@ public class Main {
 public static int counterGastos = 1;
     public static void main(String[] args) throws InvalidGastoMontoException {
 
+        System.out.println("Comenzando mi proyecto Gestor de gastos!");
+
        // Helper miHelper = new Helper();
         Scanner scanner = new Scanner(System.in);
+
 
         //se llama desde la interfaz y se instancia la implementacion
         GastoMontoValidation gastoMontoValidation = new GastoMontoValidationImpl();
@@ -42,13 +50,92 @@ public static int counterGastos = 1;
 
         // Configurar los parámetros de conexión
 
+       //voy a usar un try catch con recurso
+        try(Connection con = JdbcConfiguration.getDBConnection()){ //genero una clase de constructor-mejor performance
 
-        try{
-            System.out.println("Comenzando mi proyecto Gestor de gastos!");
+            //creando los objetos DaoImpl de H2 para realizar operaciones en la BD de H2
+            GastoDao gastoDao = new GastoDaoImplH2(con);
+            CategoriaDao categoriaDao = new CategoriaDaoImplH2(con);
 
-            //creando el objeto DaoImpl de H2 para realizar operaciones en la BD de H2
+            System.out.println("Agregando una categoria...");
+            String categoryName = scanner.nextLine();
 
-            GastoDao gastoDao = new GastoDaoImplH2();
+            CategoriaDto categoriaDto = new CategoriaDto();
+            categoriaDto.setNombre(categoryName);
+
+            categoriaDao.insert(categoriaDto);
+
+            //Agregando los gastos
+
+            System.out.println("Si desea agregar un gasto escriba Si");
+            String decision = scanner.nextLine();
+
+            if(decision.equalsIgnoreCase("Si")){
+
+                while(decision.equalsIgnoreCase("si")){
+                    //creo el objeto gastoDto
+                    GastoDto gastoDto = new GastoDto();
+
+                    System.out.println("Agregue la descripción del gasto que desea agregar: ");
+                    //lo convierto a minuscula y elimino los espacios, asi el valor es limpio y mas robusto
+                    String descrip = scanner.nextLine().toLowerCase().trim();
+                    gastoDto.setDescripcion(descrip);
+
+
+
+                    System.out.print("Agregue el valor del gasto: ");
+                    double monto = scanner.nextDouble();
+                    //llamada a validar monto de la clase Helper
+                    // miHelper.validarMonto(monto);
+
+
+                    //aqui uso el obj de la clase que implementa la interfaz seria como un helper
+                    if(!gastoMontoValidation.nonValidMonto(monto)){
+                        System.out.println("El valor del gasto es válido");
+                    }
+                    gastoDto.setValor(monto);
+
+
+                    scanner.nextLine(); //vaciando el buffer de entrada despues de la lectura del valor entero
+                    // y antes de la lectura del valor de tipo String
+
+
+                    System.out.print("Agregue la fecha: (dd/mm/aaaa) ");
+                    String fechaActual =  scanner.nextLine().toLowerCase().trim();
+                    gastoDto.setFecha(fechaActual);
+
+                    System.out.println("Agregue la categoria del gasto que desea agregar: ");
+                    //aqui podri mostrar todas las categorias de la BD
+                    String categoriaName = scanner.nextLine();
+
+                    //a partir de lo q selecciona el usuario obtengo el id de la cat
+                    Integer catId = categoriaDao.getCategoryByName(categoriaName).getId();
+                    System.out.println("id de la cat es : " + catId);
+                    //mostrar si no esta la cat insertada
+
+                    //la asigno al gastoDto
+                    gastoDto.setCategoriaId(catId);//de momento asigno 1
+
+
+                    //creo el gasto a partir de la entrada de los usuarios y lo agrego a la bd
+                    gastoDao.insert(gastoDto);
+
+                    System.out.println("Gasto inserido con exito!!");
+                    System.out.println("Si desea agregar un nuevo gasto escriba Si");
+                    decision = scanner.nextLine();
+                }
+
+
+
+                /*System.out.println(" Ahora mostrando la lista usando la interfaz");
+                gastoOperations.calculateTotalGastos(contenedorGastos);*/
+
+
+
+            }else{
+                System.out.println("Gracias, será en otra ocasión");
+            }
+
 
             //Creando el objeto Dto para guardar los datos del usuario
 
@@ -68,7 +155,9 @@ public static int counterGastos = 1;
           //  gastoDao.insertar(gastoDto);
             gastoDao.update(gastoDto);*/
 
-            gastoDao.delete(3);
+            //gastoDao.delete(3);
+
+            System.out.println("Mostrando todos los gastos registrados");
 
             List<GastoDto> listaGastosDto = gastoDao.getAll();
             System.out.println("Lista de gastos en la Base de Datos:");
@@ -82,12 +171,13 @@ public static int counterGastos = 1;
 
 
         }
-        catch(Exception ex)//InputMismatchException
+        catch(SQLException ex)//InputMismatchException
         {
+            ex.printStackTrace();
             System.out.println("Se ha producido un error inesperado: " + ex.getMessage());
-
-        }
-        finally{
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        } finally{
             System.out.println("Gracias por participar de Mi 'Gerenciador de Gastos'. Hecho por Meybis Cruz Rodriguez");
         }
     }

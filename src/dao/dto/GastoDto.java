@@ -4,7 +4,7 @@ import entities.Categoria;
 
 public class GastoDto {
     private int id;
-    private Categoria categoria;
+    private Integer categoriaId;
     private double valor;
     private String fecha;
     private String descripcion;//el profe no tiene esto
@@ -21,8 +21,8 @@ public class GastoDto {
         this.id = id;
     }
 
-    public GastoDto(Categoria categoria, String descripcion, double valor, String fecha) {
-        this.categoria = categoria;
+    public GastoDto(Integer categoriaId, String descripcion, double valor, String fecha) {
+        this.categoriaId = categoriaId;
         this.descripcion = descripcion;
         this.valor = valor;
         this.fecha = fecha;
@@ -52,12 +52,12 @@ public class GastoDto {
         this.fecha = fecha;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public Integer getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setCategoriaId(Integer categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
 }

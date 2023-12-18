@@ -1,2 +1,4 @@
-package dao;public interface Dao {
+package dao;
+
+public interface Dao<T> {
 }

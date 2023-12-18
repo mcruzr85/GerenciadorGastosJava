@@ -4,7 +4,7 @@ public class Gasto {
     //incrementa el contador cada vez que se crea una instancia de GastoReal
     public static Integer contador = 1;
     private int id;
-    private Categoria categoria;
+    private Integer categoriaId;
     private double valor;
     private String fecha;
     private String descripcion;//el profe no tiene esto
@@ -23,8 +23,8 @@ public class Gasto {
 
 
 
-    public Gasto( Categoria categoria,String descripcion, double valor,  String fecha) {
-        this.categoria = categoria;
+    public Gasto( Integer categoriaId,String descripcion, double valor,  String fecha) {
+        this.categoriaId = categoriaId;
         this.descripcion = descripcion;
         this.valor = valor;
         this.fecha = fecha;
@@ -58,12 +58,12 @@ public class Gasto {
         this.fecha = fecha;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public Integer getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setCategoriaId(Integer categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public String getGastoDescripcion(){
@@ -74,7 +74,7 @@ public class Gasto {
     public String toString() {
         return "Gasto{" +
                 "id=" + id +
-                ", categoria=" + categoria +
+                ", categoria=" + categoriaId +
                 ", valor=" + valor +
                 ", fecha='" + fecha + '\'' +
                 ", descripcion='" + descripcion + '\'' +

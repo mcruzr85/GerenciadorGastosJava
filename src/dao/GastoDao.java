@@ -9,7 +9,7 @@ import entities.Gasto;
 
         //CRUD
         //CREATE
-        void insertar(GastoDto gastoDto);
+        void insert(GastoDto gastoDto);
 
         //READ
         List<GastoDto> getAll();

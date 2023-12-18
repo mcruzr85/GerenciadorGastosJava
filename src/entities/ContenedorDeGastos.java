@@ -4,7 +4,7 @@ import java.util.*;
 
 public class ContenedorDeGastos{
 
-    private List<Gasto> gastosList = new ArrayList<>();
+  /*  private List<Gasto> gastosList = new ArrayList<>();
     private Map<String, Integer> categoriasMap = new HashMap<>();
 
 
@@ -37,14 +37,14 @@ public class ContenedorDeGastos{
 
     public void addGasto(Gasto gasto) {
         System.out.println("dentro de addGasto inicio");
-        String catName = gasto.getCategoria().getNombre();
+        Integer catName = gasto.getCategoriaId();
         System.out.println("dentro de addGasto obtuve catName: " + catName);
         /*Set<String> categoriasKeySet = this.categoriasMap.keySet(); //obteniendo una lista con las categorias
 
 
         boolean existeGastoConEsaCategoria = categoriasKeySet.stream().anyMatch( e -> Objects.equals(e, catName));*/
 
-        OptionalInt cantCat = this.categoriasMap.entrySet().stream()
+      /*  OptionalInt cantCat = this.categoriasMap.entrySet().stream()
                 .filter(e -> e.getKey().equals(catName))
                 .mapToInt(Map.Entry::getValue)
                 .findFirst();

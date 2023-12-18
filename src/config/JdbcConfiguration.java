@@ -16,13 +16,16 @@ public class JdbcConfiguration {
         try{
             Class.forName(DB_DRIVER); //para inicializar el driver
             connection = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
+            return connection;
+            // return DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD); lo mismo
+
 
         }catch(ClassNotFoundException | SQLException e){
             //ClassNotFoundException por si cuando tratamos de inicializar el driver no se encuentra la clases apropiada
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        return connection;
+
     }
 
 
