@@ -22,20 +22,24 @@ public class CategoriaDaoImplH2 implements CategoriaDao{
        this.connection = connection;
     }
     @Override
-    public void insert(CategoriaDto catDto) {
+    public void insert(CategoriaDto catDto) throws DAOException {
 
-        try{
+        try( PreparedStatement ps = connection.prepareStatement(INSERT_INTO_CATEGORY);){//try con recursos
 
             Categoria categoria = mapDtoToCategoria(catDto);
 
-            PreparedStatement ps = connection.prepareStatement(INSERT_INTO_CATEGORY);
             ps.setString(1, categoria.getNombre());
 
-            ps.executeUpdate();
-            ps.close();
+           int affectedRows = ps.executeUpdate();
+            //validando el resultado de la ejecucion del statement
+            // si no devuelve filas afectadas hubo un error al insertar en la bd
+            if(affectedRows == 0){
+                throw new DAOException("Error al insertar la categoria en la base de datos, 0 filas afectadas.");
+            }
 
-        }catch(SQLException e){
-            throw new RuntimeException(e);
+        }catch(SQLException | DAOException e){
+            assert e instanceof SQLException;
+            throw new DAOException("Error en el  DAO", (SQLException) e);  //propagando la excepcion
         }
     }
 
@@ -44,26 +48,26 @@ public class CategoriaDaoImplH2 implements CategoriaDao{
     @Override
     public CategoriaDto getCategoryByName(String name) throws DAOException {
         CategoriaDto catDto = new CategoriaDto();
+        System.out.println("nombre de la categoria a buscar: " + name);
 
-        try{
+        try( PreparedStatement ps = connection.prepareStatement(GET_CATEGORY_BY_NAME)){
 
-            PreparedStatement ps = connection.prepareStatement(GET_CATEGORY_BY_NAME);
             ps.setString(1, name);
 
             ResultSet rs = ps.executeQuery();
            if(rs.next()){
                Categoria newCategoria =  new Categoria(rs.getInt("id_cat") , rs.getString("nombre")) ;
+               System.out.println(newCategoria.getId() + " " + newCategoria.getNombre());
                catDto = mapCategoriaToDto(newCategoria);
+               System.out.println(catDto.getId() + " " + catDto.getNombre());
+               return catDto;
            }
-            rs.close();
-            ps.close();
+           return null;
 
 
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
-
-        return catDto;
     }
 
     @Override
@@ -96,8 +100,9 @@ public class CategoriaDaoImplH2 implements CategoriaDao{
     }
     private CategoriaDto mapCategoriaToDto(Categoria categoria) {
         CategoriaDto categoriaDto = new CategoriaDto();
+        categoriaDto.setId(categoria.getId());
         categoriaDto.setNombre(categoria.getNombre());
-        categoriaDto.setId(categoriaDto.getId());
+
         return categoriaDto;
     }
 

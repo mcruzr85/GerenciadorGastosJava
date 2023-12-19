@@ -57,13 +57,24 @@ public static int counterGastos = 1;
             GastoDao gastoDao = new GastoDaoImplH2(con);
             CategoriaDao categoriaDao = new CategoriaDaoImplH2(con);
 
-            System.out.println("Agregando una categoria...");
-            String categoryName = scanner.nextLine();
+            System.out.println("Si desea agregar una nueva categoria escriba: si");
+            String agregarCat = scanner.nextLine();
 
-            CategoriaDto categoriaDto = new CategoriaDto();
-            categoriaDto.setNombre(categoryName);
+            while(agregarCat.trim().equalsIgnoreCase("Si")){
+                System.out.println("Inserte la categoria que desea agregar: ");
+                String categoryName = scanner.nextLine().toLowerCase().trim();
 
-            categoriaDao.insert(categoriaDto);
+                CategoriaDto categoriaDto = new CategoriaDto();
+                categoriaDto.setNombre(categoryName);
+
+              //utilizando el objeto Dao para insertar la categoria en la base de datos
+                categoriaDao.insert(categoriaDto);
+
+                System.out.println("Si desea agregar otra categoria escriba: si");
+                agregarCat = scanner.nextLine();
+            }
+
+
 
             //Agregando los gastos
 
@@ -106,15 +117,25 @@ public static int counterGastos = 1;
 
                     System.out.println("Agregue la categoria del gasto que desea agregar: ");
                     //aqui podri mostrar todas las categorias de la BD
-                    String categoriaName = scanner.nextLine();
+                    String categoriaName = scanner.nextLine().toLowerCase().trim();
 
-                    //a partir de lo q selecciona el usuario obtengo el id de la cat
-                    Integer catId = categoriaDao.getCategoryByName(categoriaName).getId();
-                    System.out.println("id de la cat es : " + catId);
+                    //a partir del nombre de categoria que inserta el usuario obtengo el id de dicha categoria
+                    CategoriaDto getterCategoriaDto = categoriaDao.getCategoryByName(categoriaName);
+
+                    while(getterCategoriaDto==null) {
+                        System.out.println("No existe esa categoria aún");
+                        System.out.println("Agregue la categoria del gasto que desea agregar: ");
+
+                         categoriaName = scanner.nextLine().toLowerCase().trim();
+
+                        getterCategoriaDto = categoriaDao.getCategoryByName(categoriaName);
+                    }
+
+                    System.out.println("id de la cat es : " + getterCategoriaDto.getId());
                     //mostrar si no esta la cat insertada
 
                     //la asigno al gastoDto
-                    gastoDto.setCategoriaId(catId);//de momento asigno 1
+                    gastoDto.setCategoriaId(getterCategoriaDto.getId());
 
 
                     //creo el gasto a partir de la entrada de los usuarios y lo agrego a la bd
@@ -157,9 +178,11 @@ public static int counterGastos = 1;
 
             //gastoDao.delete(3);
 
-            System.out.println("Mostrando todos los gastos registrados");
-
             List<GastoDto> listaGastosDto = gastoDao.getAll();
+
+            System.out.println("Monto total de los gastos registrados: " + gastoOperations.calculateTotalGastos(listaGastosDto));
+
+
             System.out.println("Lista de gastos en la Base de Datos:");
             for(GastoDto gastoDto1 : listaGastosDto){
                 System.out.println("Id: " + gastoDto1.getId());

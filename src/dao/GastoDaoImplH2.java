@@ -1,8 +1,6 @@
 package dao;
 
-import config.JdbcConfiguration;
 import dao.dto.GastoDto;
-import entities.Categoria;
 import entities.Gasto;
 import exceptions.DAOException;
 
@@ -16,6 +14,7 @@ import java.sql.Connection;
 public class GastoDaoImplH2 implements GastoDao{
 
     private static final String INSERT_INTO_EXPENSE = "INSERT INTO expense (description, amount, date, id_category) VALUES (?, ?, ?, ?)";
+    private static final String GET_ALL_EXPENSES = "SELECT * FROM expense";
 
     //generando una instancia de conexion que tiene que ser provista por otro obj
     private final Connection connection; //esto es una dependencia
@@ -54,39 +53,23 @@ public class GastoDaoImplH2 implements GastoDao{
     }
 
     @Override
-    public List<GastoDto> getAll() {
+    public List<GastoDto> getAll() throws DAOException {
         List<GastoDto> gastosDto = new ArrayList<>();
 
-        try{
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM expense");
-            ResultSet rs = ps.executeQuery();
+        try(PreparedStatement ps = connection.prepareStatement(GET_ALL_EXPENSES)){
 
-            while(rs.next()){
-                int id = rs.getInt("id_exp");
-                String descripcion = rs.getString("description");
-                String fecha = rs.getString("date");
-                double price = rs.getDouble("amount");
-                Integer id_cat = rs.getInt("id_category");
+            ResultSet resultSet = ps.executeQuery();
 
-
-                GastoDto newGastoDto = new GastoDto();
-                newGastoDto.setId(id);
-                newGastoDto.setDescripcion(descripcion);
-                newGastoDto.setValor(price);
-                newGastoDto.setFecha(fecha);
-                newGastoDto.setCategoriaId(id_cat);
-
-                gastosDto.add(newGastoDto);
+            while(resultSet.next()){
+                gastosDto.add(mapResultSetToGastoDto(resultSet));
             }
-            // Cerrar el ResultSet y el PreparedStatement
-            rs.close();
-            ps.close();
 
+            return gastosDto;
 
         }catch(SQLException e){
-            throw new RuntimeException(e);
+            throw new DAOException("Error al recuperar la lista de gastos", e);
         }
-        return gastosDto;
+
     }
 
     @Override
@@ -143,4 +126,16 @@ private Gasto mapDtoToGasto(GastoDto gastoDto){
     return newGasto;
 }
 
+private GastoDto mapResultSetToGastoDto(ResultSet rs) throws SQLException {
+        //creo un objeto gastodto
+    GastoDto newGastoDto = new GastoDto();
+    //obtengo el dato del result set dado el nombre de la columna en la base de datos y lo agrego a mi objeto de gastosdto
+        newGastoDto.setId(rs.getInt("id_exp"));
+        newGastoDto.setDescripcion(rs.getString("description"));
+        newGastoDto.setValor(rs.getDouble("amount"));
+        newGastoDto.setFecha(rs.getString("date"));
+        newGastoDto.setCategoriaId(rs.getInt("id_category"));
+
+        return newGastoDto;//retorno mi objeto gastoDto ya con todos los valores incorporados
+   }
 }

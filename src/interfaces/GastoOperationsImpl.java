@@ -1,5 +1,6 @@
 package interfaces;
 
+import dao.dto.GastoDto;
 import entities.Gasto;
 import java.util.List;
 
@@ -10,9 +11,11 @@ public class GastoOperationsImpl implements GastoOperations{
     }
 
     @Override
-    public double calculateTotalGastos(List<Gasto> gastos) {
+    public double calculateTotalGastos(List<GastoDto> gastos) {
         double total = 0;
-           total =  (double) gastos.stream().count();
-        return total;
+         for(GastoDto gastoDto : gastos){
+             total += gastoDto.getValor();
+         }
+         return total;
     }
 }

@@ -12,7 +12,7 @@ public interface CategoriaDao {
 
     //CRUD
     //CREATE
-    void insert(CategoriaDto catDto);
+    void insert(CategoriaDto catDto) throws DAOException;
     CategoriaDto getCategoryByName(String name) throws DAOException;
 
     //READ
